@@ -1,21 +1,26 @@
 package com.example.mymovie.MyMovie.model;
 
+import com.example.mymovie.MyMovie.db.MySqlHandler;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MovieInfo {
 
     private Integer userID;
+    private String userName;
     private ArrayList<Movie> myMovies;
     private ArrayList<Rating> myMoviesRating;
 
 
-    public MovieInfo(Integer userID) {
+    public MovieInfo(Integer userID) throws SQLException {
 
         this.userID = userID;
+        MySqlHandler mySqlHandler = new MySqlHandler();
+        this.userName = mySqlHandler.getUserById(this.userID).getUserName();
         this.myMovies = new ArrayList<Movie>();
         this.myMoviesRating = new ArrayList<Rating>();
     }
-
 
     public Integer getUserID() {
         return userID;
@@ -23,6 +28,14 @@ public class MovieInfo {
 
     public void setUserID(Integer userID) {
         this.userID = userID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName)  {
+        this.userName = userName;
     }
 
     public ArrayList<Movie> getMyMovies() {

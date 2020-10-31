@@ -8,8 +8,12 @@
 
     <form th:object="${user}" method="post">
 
+        <p> ID: </p>
         <input type="text" th:field="*{userID}" />
+        <p> Name: </p>
+        <input type="text" th:field="*{userName}" />
         <input type = "submit" />
+        <p th:text="${badMessage}" ></p>
     </form>
 
 

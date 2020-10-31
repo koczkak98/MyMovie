@@ -7,6 +7,7 @@ public class Movie {
     private String title;
     private String category;
     private String description;
+    private int ageLimit;
 
 
     public Movie() {
@@ -49,5 +50,13 @@ public class Movie {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getAgeLimit() {
+        return ageLimit;
+    }
+
+    public void setAgeLimit(int ageLimit) {
+        this.ageLimit = ageLimit;
     }
 }

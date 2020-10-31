@@ -12,7 +12,7 @@ public class MySqlHandler {
 
 
     public User getUserById (int userID) throws SQLException {
-        User user = new User();
+        User user = new User(userID);
 
         // Create DB Connection
         Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PWD);
@@ -29,7 +29,43 @@ public class MySqlHandler {
             // userId Column
             int id = rs.getInt("userId");
 
-            if (id == user.getUserID())
+            if (id == userID)
+            {
+                user.setUserName(rs.getNString("name"));
+                user.addMovieID(rs.getInt("movieId"));
+
+            }
+        }
+
+        // Close the ResultSet
+        rs.close();
+        // Close the Statement
+        stmt.close();
+        // Close the DB Connection
+        conn.close();
+
+        return user;
+    }
+
+    public User addMovieById (int userID, int movieID) throws SQLException {
+        User user = new User(userID);
+
+        // Create DB Connection
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PWD);
+
+        // Prepare SQL Execution
+        Statement stmt = conn.createStatement();
+
+        String sqlInsertIntoValues = "INSERT INTO users (userId, name, movieId) VALUES ({userID}, {name}, {movieID})";
+        ResultSet rs = stmt.executeQuery(sqlInsertIntoValues);
+
+        // ON-DEMAND: Iterate over the result
+        while(rs.next())
+        {
+            // userId Column
+            int id = rs.getInt("userId");
+
+            if (id == userID)
             {
                 user.setUserName(rs.getNString("name"));
                 user.addMovieID(rs.getInt("movieId"));

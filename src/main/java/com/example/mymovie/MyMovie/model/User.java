@@ -9,6 +9,10 @@ public class User {
     private ArrayList<Integer> movieIDs;
 
     public User() {
+    }
+
+    public User(Integer userID) {
+        this.userID = userID;
         this.movieIDs = new ArrayList<Integer>();
     }
 
@@ -39,6 +43,10 @@ public class User {
 
     public void addMovieID(Integer movieID) {
         this.movieIDs.add(movieID);
+    }
+
+    public void deleteMovieID(Integer movieID) {
+        this.movieIDs.remove(movieID);
     }
 
 }
