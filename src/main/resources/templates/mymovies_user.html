@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Faviourite Movies</title>
+    </head>
+
+    <body>
+        <p th:text="${myMovies.userID}" ></p>
+
+        <p th:each="myMovie : ${myMovies.myMovies}"
+           th:text="${myMovie.title} + '-' + ${myMovie.category} + ': ' + ${myMovie.description}"></p>
+
+
+        <p th:each="myRating : ${myMovies.myMoviesRating}"
+           th:text="${myRating.totalScore} + ' / ' + ${myRating.averages} + ' %'"></p>
+
+    </body>
+</html>

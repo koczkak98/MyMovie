@@ -1,5 +1,6 @@
 package com.example.mymovie.MyMovie.controller;
 
+import com.example.mymovie.MyMovie.db.MySqlHandler;
 import com.example.mymovie.MyMovie.model.Movie;
 import com.example.mymovie.MyMovie.model.MovieInfo;
 import com.example.mymovie.MyMovie.model.Rating;
@@ -7,10 +8,12 @@ import com.example.mymovie.MyMovie.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Controller
@@ -27,15 +30,18 @@ public class MyMovieController {
     @PostMapping("/getuser")
     public String getUserMovies(
             User user,
-            @RequestParam("userId") int userID,
-            Model model)
-    {
+            int userID,
+            Model model) throws SQLException {
         /** 01 */
 
-        /** Dummy Object */
-        user.addMovieID(123);
-        user.addMovieID(456);
-        user.addMovieID(789);
+        System.out.println("************-STARTED*****************");
+
+        MySqlHandler mySqlHandler = new MySqlHandler();
+        user = mySqlHandler.getUserById(user.getUserID());
+
+
+        System.out.println(user.getMovieIDs());
+
 
 
         RestTemplate restTemplate = new RestTemplate();
@@ -54,10 +60,9 @@ public class MyMovieController {
         }
 
 
-        model.addAttribute("myMovies", mi);
+            model.addAttribute("myMovies", mi);
 
-
-        return "mymovies.html";
+        return "mymovies_user.html";
     }
 
 }
