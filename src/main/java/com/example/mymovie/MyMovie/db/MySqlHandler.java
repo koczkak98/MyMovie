@@ -31,6 +31,7 @@ public class MySqlHandler {
 
             if (id == user.getUserID())
             {
+                user.setUserName(rs.getNString("name"));
                 user.addMovieID(rs.getInt("movieId"));
 
             }
