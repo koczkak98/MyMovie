@@ -47,38 +47,4 @@ public class MySqlHandler {
         return user;
     }
 
-    public User addMovieById (int userID, int movieID) throws SQLException {
-        User user = new User(userID);
-
-        // Create DB Connection
-        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PWD);
-
-        // Prepare SQL Execution
-        Statement stmt = conn.createStatement();
-
-        String sqlInsertIntoValues = "SELECT * FROM users";
-        ResultSet rs = stmt.executeQuery(sqlInsertIntoValues);
-
-        // ON-DEMAND: Iterate over the result
-        while(rs.next())
-        {
-            // userId Column
-            int id = rs.getInt("userId");
-
-            if (id == userID)
-            {
-                user.addMovieID(movieID);
-
-            }
-        }
-
-        // Close the ResultSet
-        rs.close();
-        // Close the Statement
-        stmt.close();
-        // Close the DB Connection
-        conn.close();
-
-        return user;
-    }
 }

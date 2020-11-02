@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Faviourite Movies</title>
+    </head>
+
+        <body>
+
+        <form th:object="${user}" method="post">
+
+            <p> ID: </p>
+            <input type="text" th:field="*{userID}" />
+            <p> Name: </p>
+            <input type="text" th:field="*{userName}" />
+
+
+        </form>
+
+        <form th:object="${movie}" method="post">
+
+            <p> Movie ID: </p>
+            <input type="text" th:field="*{movieID}" />
+            <input type = "submit" />
+
+        </form>
+
+
+
+    </body>
+</html>

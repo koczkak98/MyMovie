@@ -70,14 +70,25 @@ public class MyMovieController {
 
             model.addAttribute("user", user);
 
+
             /** View */
         }
 
         return "mymovies_user.html";
     }
 
+    @GetMapping("/getuser/addmovie/{userId}/{movieId}")
+    public String addmovie (
+            @PathVariable("userId") int userId,
+            @PathVariable("movieId") int movieId) throws SQLException {
 
+        MySqlHandler mySqlHandler = new MySqlHandler();
+        User user = mySqlHandler.getUserById(userId);
 
+        user.addMovieID(movieId);
+
+        return "seenmovies.html";
+    }
 
 
 
