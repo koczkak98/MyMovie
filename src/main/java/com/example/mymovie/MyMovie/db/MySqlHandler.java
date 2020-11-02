@@ -56,7 +56,7 @@ public class MySqlHandler {
         // Prepare SQL Execution
         Statement stmt = conn.createStatement();
 
-        String sqlInsertIntoValues = "INSERT INTO users (userId, name, movieId) VALUES ({userID}, {name}, {movieID})";
+        String sqlInsertIntoValues = "SELECT * FROM users";
         ResultSet rs = stmt.executeQuery(sqlInsertIntoValues);
 
         // ON-DEMAND: Iterate over the result
@@ -67,8 +67,7 @@ public class MySqlHandler {
 
             if (id == userID)
             {
-                user.setUserName(rs.getNString("name"));
-                user.addMovieID(rs.getInt("movieId"));
+                user.addMovieID(movieID);
 
             }
         }

@@ -20,5 +20,13 @@
 
         <p th:text="${myMovies.userName} + ' saw ' + ${movieSize} + ' movies.' " ></p>
 
+        <form th:object="${user}" method="post">
+
+            <p> Movie ID: </p>
+            <input type="text" th:field="*{movieIDs}"  />
+            <input type = "submit" />
+
+        </form>
+
     </body>
 </html>

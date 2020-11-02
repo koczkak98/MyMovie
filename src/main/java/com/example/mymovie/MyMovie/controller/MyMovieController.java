@@ -8,9 +8,9 @@ import com.example.mymovie.MyMovie.model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.security.InvalidParameterException;
@@ -35,9 +35,8 @@ public class MyMovieController {
 
         System.out.println("************-STARTED*****************");
 
+        /** View */
         MySqlHandler mySqlHandler = new MySqlHandler();
-
-        /** Frontend oldalon ötletem sincs hogy lehetne ezt lekezelni... */
 
         if (user.getUserName().equals(mySqlHandler.getUserById(user.getUserID()).getUserName()) == false) {
             System.out.println("ID != Name");
@@ -68,10 +67,19 @@ public class MyMovieController {
 
             model.addAttribute("myMovies", mi);
             model.addAttribute("movieSize", myMovieIDs.size());
+
+            model.addAttribute("user", user);
+
+            /** View */
         }
 
         return "mymovies_user.html";
     }
+
+
+
+
+
 
     @GetMapping("/deletemovie")
     public String deleteMovie(
@@ -80,6 +88,7 @@ public class MyMovieController {
             Model model)
     {
         System.out.println("Delete Started...");
+
         try
         {
             User user = new User(userID);
@@ -89,10 +98,12 @@ public class MyMovieController {
         catch(InvalidParameterException e)
         {
             model.addAttribute("result", e.getMessage());
+            System.out.println("delete");
         }
         catch (Exception e)
         {
             model.addAttribute("result", e.getMessage());
+            System.out.println("delete");
         }
 
         return "deletemovie.html";
