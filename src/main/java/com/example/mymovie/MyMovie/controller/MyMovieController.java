@@ -35,47 +35,45 @@ public class MyMovieController {
 
         System.out.println("************-STARTED*****************");
 
+        System.out.println(userID);
+        System.out.println(user.getUserID());
+        System.out.println(user.getUserName());
+
         /** View */
         MySqlHandler mySqlHandler = new MySqlHandler();
 
-        if (user.getUserName().equals(mySqlHandler.getUserById(user.getUserID()).getUserName()) == false) {
-            System.out.println("ID != Name");
-            model.addAttribute("badMessage", "ID != Name");
-        } else {
 
-            user = mySqlHandler.getUserById(userID);
+        user = mySqlHandler.getUserById(user.getUserID());
+        System.out.println(user.getUserID());
 
 
-            System.out.println(user.getMovieIDs());
+        RestTemplate restTemplate = new RestTemplate();
+
+        MovieInfo mi = new MovieInfo(user.getUserID());
+        ArrayList<Integer> myMovieIDs = user.getMovieIDs();
 
 
-            RestTemplate restTemplate = new RestTemplate();
-
-            MovieInfo mi = new MovieInfo(userID);
-            ArrayList<Integer> myMovieIDs = user.getMovieIDs();
-
-
-            for (int i = 0; i < myMovieIDs.size(); i++) {
-                Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(i), Movie.class);
-                Rating rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(i), Rating.class);
+        for (int i = 0; i < myMovieIDs.size(); i++) {
+            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(i), Movie.class);
+            Rating rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(i), Rating.class);
 
 
-                mi.addMovie(movie);
-                mi.addRating(rating);
-            }
-
-
-            model.addAttribute("myMovies", mi);
-            model.addAttribute("movieSize", myMovieIDs.size());
-
-            model.addAttribute("user", user);
-
-
-            /** View */
+            mi.addMovie(movie);
+            mi.addRating(rating);
         }
+
+
+        model.addAttribute("myMovies", mi);
+        model.addAttribute("movieSize", myMovieIDs.size());
+
+        model.addAttribute("user", user);
+
+
+        /** View */
 
         return "mymovies_user.html";
     }
+
 
     @GetMapping("/getuser/addmovie/{userId}/{movieId}")
     public String addmovie (
@@ -85,7 +83,9 @@ public class MyMovieController {
         MySqlHandler mySqlHandler = new MySqlHandler();
         User user = mySqlHandler.getUserById(userId);
 
-        user.addMovieID(movieId);
+        //user.addMovieID(movieId);
+
+        user = mySqlHandler.addMovie(userId, movieId);
 
         return "seenmovies.html";
     }
