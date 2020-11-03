@@ -43,13 +43,13 @@ public class MyMovieController {
         MySqlHandler mySqlHandler = new MySqlHandler();
 
 
-        user = mySqlHandler.getUserById(user.getUserID());
+        user = mySqlHandler.getUserById(userID);
         System.out.println(user.getUserID());
 
 
         RestTemplate restTemplate = new RestTemplate();
 
-        MovieInfo mi = new MovieInfo(user.getUserID());
+        MovieInfo mi = new MovieInfo(userID);
         ArrayList<Integer> myMovieIDs = user.getMovieIDs();
 
 
@@ -78,14 +78,25 @@ public class MyMovieController {
     @GetMapping("/getuser/addmovie/{userId}/{movieId}")
     public String addmovie (
             @PathVariable("userId") int userId,
-            @PathVariable("movieId") int movieId) throws SQLException {
+            @PathVariable("movieId") int movieId,
+            Model model) throws SQLException {
+
+
 
         MySqlHandler mySqlHandler = new MySqlHandler();
         User user = mySqlHandler.getUserById(userId);
 
-        //user.addMovieID(movieId);
+        if (user.getMovieIDs().contains(movieId) == false)
+        {
+            user = mySqlHandler.addMovie(userId, movieId);
+        }
+        else
+        {
+            System.out.println("Már hozzáadtad egyszer!");
+            model.addAttribute("message", "Már hozzáadtad egyszer!");
+        }
 
-        user = mySqlHandler.addMovie(userId, movieId);
+
 
         return "seenmovies.html";
     }
@@ -96,25 +107,19 @@ public class MyMovieController {
     public String deleteMovie(
             @RequestParam("userid") int userID,
             @RequestParam("movieid") int movieID,
-            Model model)
-    {
+            Model model) throws InvalidParameterException, SQLException {
         System.out.println("Delete Started...");
 
-        try
+        MySqlHandler mySqlHandler = new MySqlHandler();
+        User user = mySqlHandler.getUserById(userID);
+
+        if(user.getMovieIDs().contains(movieID) == false)
         {
-            User user = new User(userID);
-            user.deleteMovieID(movieID);
-            model.addAttribute("result", user.getMovieIDs());
+            throw new InvalidParameterException("Can't execute");
         }
-        catch(InvalidParameterException e)
+        else
         {
-            model.addAttribute("result", e.getMessage());
-            System.out.println("delete");
-        }
-        catch (Exception e)
-        {
-            model.addAttribute("result", e.getMessage());
-            System.out.println("delete");
+            mySqlHandler.deleteMovie(userID, movieID);
         }
 
         return "deletemovie.html";
