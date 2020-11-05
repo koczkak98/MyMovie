@@ -4,7 +4,7 @@ import com.example.mymovie.MyMovie.model.User;
 
 import java.sql.*;
 
-public class MySqlHandler {
+public class JDBC_SQLHandler {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/movies?serverTimezone=UTC";
     private static final String DB_USER = "root";
@@ -77,7 +77,6 @@ public class MySqlHandler {
                 System.out.println(result);
 
                 break;
-
             }
         }
 

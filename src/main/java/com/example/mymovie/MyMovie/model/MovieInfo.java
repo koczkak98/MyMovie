@@ -1,6 +1,6 @@
 package com.example.mymovie.MyMovie.model;
 
-import com.example.mymovie.MyMovie.db.MySqlHandler;
+import com.example.mymovie.MyMovie.db.JDBC_SQLHandler;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class MovieInfo {
     public MovieInfo(Integer userID) throws SQLException {
 
         this.userID = userID;
-        MySqlHandler mySqlHandler = new MySqlHandler();
+        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
         this.userName = mySqlHandler.getUserById(this.userID).getUserName();
         this.myMovies = new ArrayList<Movie>();
         this.myMoviesRating = new ArrayList<Rating>();

@@ -1,6 +1,6 @@
 package com.example.mymovie.MyMovie.controller;
 
-import com.example.mymovie.MyMovie.db.MySqlHandler;
+import com.example.mymovie.MyMovie.db.JDBC_SQLHandler;
 import com.example.mymovie.MyMovie.model.Movie;
 import com.example.mymovie.MyMovie.model.MovieInfo;
 import com.example.mymovie.MyMovie.model.Rating;
@@ -40,7 +40,7 @@ public class MyMovieController {
         System.out.println(user.getUserName());
 
         /** View */
-        MySqlHandler mySqlHandler = new MySqlHandler();
+        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
 
 
         user = mySqlHandler.getUserById(userID);
@@ -83,7 +83,7 @@ public class MyMovieController {
 
 
 
-        MySqlHandler mySqlHandler = new MySqlHandler();
+        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
         User user = mySqlHandler.getUserById(userId);
 
         if (user.getMovieIDs().contains(movieId) == false)
@@ -110,7 +110,7 @@ public class MyMovieController {
             Model model) throws InvalidParameterException, SQLException {
         System.out.println("Delete Started...");
 
-        MySqlHandler mySqlHandler = new MySqlHandler();
+        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
         User user = mySqlHandler.getUserById(userID);
 
         if(user.getMovieIDs().contains(movieID) == false)
