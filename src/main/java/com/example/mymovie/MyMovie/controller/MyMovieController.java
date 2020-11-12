@@ -6,6 +6,7 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -53,9 +54,6 @@ public class MyMovieController {
 
         System.out.println("After use HibernateSQLHandler: " + user.getUserID());
 
-
-
-
         MovieInfo mi = new MovieInfo(userID);
         List<Integer> myMovieIDs = user.getMovieIDs();
 
@@ -64,9 +62,7 @@ public class MyMovieController {
             Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
             RatingInfo rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(idx), RatingInfo.class);
 
-
             mi.addMovie(movie);
-
 
             for (int i = 0; i < rating.getRatings().size(); i++)
             {
@@ -90,58 +86,12 @@ public class MyMovieController {
         return "mymovies_user.html";
     }
 
-    /**
+    @GetMapping("/getuser/ratingbyuserid/{userid}")
+    public Rating getRatingByUserId (@PathVariable("userid") int userId)
+    {
+        Rating rating = new Rating();
 
-    @GetMapping("/getuser/addmovie/{userId}/{movieId}")
-    public String addmovie (
-            @PathVariable("userId") int userId,
-            @PathVariable("movieId") int movieId,
-            Model model) throws SQLException {
-
-
-
-        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
-        User user = mySqlHandler.getUserById(userId);
-
-        if (user.getMovieIDs().contains(movieId) == false)
-        {
-            user = mySqlHandler.addMovie(userId, movieId);
-        }
-        else
-        {
-            System.out.println("Már hozzáadtad egyszer!");
-            model.addAttribute("message", "Már hozzáadtad egyszer!");
-        }
-
-
-
-        return "seenmovies.html";
+        return rating;
     }
-
-
-
-    @GetMapping("/deletemovie")
-    public String deleteMovie(
-            @RequestParam("userid") int userID,
-            @RequestParam("movieid") int movieID,
-            Model model) throws InvalidParameterException, SQLException {
-        System.out.println("Delete Started...");
-
-        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
-        User user = mySqlHandler.getUserById(userID);
-
-        if(user.getMovieIDs().contains(movieID) == false)
-        {
-            throw new InvalidParameterException("Can't execute");
-        }
-        else
-        {
-            mySqlHandler.deleteMovie(userID, movieID);
-        }
-
-        return "deletemovie.html";
-
-    }
-            */
 
 }

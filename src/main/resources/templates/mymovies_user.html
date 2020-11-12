@@ -15,7 +15,7 @@
        th:text="${myMovie.title} + '-' + ${myMovie.category} + ': ' + ${myMovie.description} + ' ' +${myMovie.ageLimit + '+'}"></p>
 
    <p th:each="myRating : ${myMovies.myMoviesRating}"
-      th:text="${myRating.totalScore} + ' / ' + ${myRating.scores}"></p>
+      th:text="${myRating.totalScore} + ' / ' + ${myRating.scores} + ' - ' + ${myRating.averages} + ' %' " ></p>
 
    <p th:text="${user.userName} + ' saw ' + ${movieSize} + ' movies.' " ></p>
 
