@@ -8,16 +8,16 @@
     <p th:text="${badMessage}" ></p>
 
     <p th:text="${myMovies.userID}" ></p>
-    <p th:text="${myMovies.userName}" ></p>
+    <p th:text="${user.userName}" ></p>
 
 
-    <p th:each="myMovie : ${myMovies.myMovies}"
-        th:text="${myMovie.title} + '-' + ${myMovie.category} + ': ' + ${myMovie.description} + ' ' +${myMovie.ageLimit + '+'}"></p>
+   <p th:each="myMovie : ${myMovies.myMovies}"
+       th:text="${myMovie.title} + '-' + ${myMovie.category} + ': ' + ${myMovie.description} + ' ' +${myMovie.ageLimit + '+'}"></p>
 
-    <p th:each="myRating : ${myMovies.myMoviesRating}"
-       th:text="${myRating.totalScore} + ' / ' + ${myRating.scores}"></p>
+   <p th:each="myRating : ${myMovies.myMoviesRating}"
+      th:text="${myRating.totalScore} + ' / ' + ${myRating.scores}"></p>
 
-    <p th:text="${myMovies.userName} + ' saw ' + ${movieSize} + ' movies.' " ></p>
+   <p th:text="${user.userName} + ' saw ' + ${movieSize} + ' movies.' " ></p>
 
 
 </body>

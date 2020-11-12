@@ -1,21 +1,17 @@
 package com.example.mymovie.MyMovie.controller;
 
-import com.example.mymovie.MyMovie.db.JDBC_SQLHandler;
-import com.example.mymovie.MyMovie.model.Movie;
-import com.example.mymovie.MyMovie.model.MovieInfo;
-import com.example.mymovie.MyMovie.model.Rating;
-import com.example.mymovie.MyMovie.model.User;
+import com.example.mymovie.MyMovie.db.Hibernate_SQLHandler;
+import com.example.mymovie.MyMovie.model.*;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
-import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MyMovieController {
@@ -40,29 +36,49 @@ public class MyMovieController {
         System.out.println(user.getUserName());
 
         /** View */
+        /** JDBC */
+        /**
         JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
 
 
         user = mySqlHandler.getUserById(userID);
-        System.out.println(user.getUserID());
+         */
+
+        /** Hibernate */
+        Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
+
+        hibernate_sqlHandler.open();
+        user = hibernate_sqlHandler.getUserById(user.getUserID());
+        hibernate_sqlHandler.close();
+
+        System.out.println("After use HibernateSQLHandler: " + user.getUserID());
 
 
-        RestTemplate restTemplate = new RestTemplate();
+
 
         MovieInfo mi = new MovieInfo(userID);
-        ArrayList<Integer> myMovieIDs = user.getMovieIDs();
+        List<Integer> myMovieIDs = user.getMovieIDs();
 
-
-        for (int i = 0; i < myMovieIDs.size(); i++) {
-            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(i), Movie.class);
-            Rating rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(i), Rating.class);
+        RestTemplate restTemplate = new RestTemplate();
+        for (int idx = 0; idx < myMovieIDs.size(); idx++) {
+            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
+            RatingInfo rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(idx), RatingInfo.class);
 
 
             mi.addMovie(movie);
-            mi.addRating(rating);
+
+
+            for (int i = 0; i < rating.getRatings().size(); i++)
+            {
+                mi.addRating(rating.getRatings().get(i));
+            }
+
         }
 
+        System.out.println(mi.getMyMoviesRating());
 
+
+        /** VIEW */
         model.addAttribute("myMovies", mi);
         model.addAttribute("movieSize", myMovieIDs.size());
 
@@ -74,6 +90,7 @@ public class MyMovieController {
         return "mymovies_user.html";
     }
 
+    /**
 
     @GetMapping("/getuser/addmovie/{userId}/{movieId}")
     public String addmovie (
@@ -125,5 +142,6 @@ public class MyMovieController {
         return "deletemovie.html";
 
     }
+            */
 
 }

@@ -1,11 +1,18 @@
 package com.example.mymovie.MyMovie.model;
 
+import javax.persistence.*;
+
+
 public class Rating {
 
+    private Integer ratingId;
+
+    private double scores;
+
+    private double totalScore;
 
     private Integer movieId;
-    private double scores;
-    private double totalScore;
+
     private double averages;
 
 
@@ -16,6 +23,14 @@ public class Rating {
         this.movieId = movieId;
     }
 
+
+    public Integer getRatingId() {
+        return ratingId;
+    }
+
+    public void setRatingId(Integer ratingId) {
+        this.ratingId = ratingId;
+    }
 
     public Integer getMovieId() {
         return movieId;
@@ -41,9 +56,6 @@ public class Rating {
         this.totalScore = totalScore;
     }
 
-    public void setAverages(double averages) {
-        this.averages = averages;
-    }
 
     public double getAverages() {
         return averages;
@@ -52,5 +64,6 @@ public class Rating {
     public void setAverages() {
         this.averages = ((this.scores / this.totalScore)) * 100;
     }
+
 
 }

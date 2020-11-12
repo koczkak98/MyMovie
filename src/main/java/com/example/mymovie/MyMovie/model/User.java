@@ -1,14 +1,32 @@
 package com.example.mymovie.MyMovie.model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userID;
+
+    @Column(name = "name")
     private String userName;
-    private ArrayList<Integer> movieIDs;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "user_movie_mapping",
+            joinColumns = @JoinColumn(name = "userid"))
+    @Column(name = "movieid")
+    private List<Integer> movieIDs;
+
+
 
     public User() {
+        this.movieIDs = new ArrayList<Integer>();
     }
 
     public User(Integer userID) {
@@ -31,13 +49,11 @@ public class User {
         this.userID = userID;
     }
 
-
-    public ArrayList<Integer> getMovieIDs() {
+    public List<Integer> getMovieIDs() {
         return movieIDs;
     }
 
-
-    public void setMovieIDs(ArrayList<Integer> movieIDs) {
+    public void setMovieIDs(List<Integer> movieIDs) {
         this.movieIDs = movieIDs;
     }
 
