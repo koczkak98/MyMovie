@@ -1,22 +1,52 @@
 package com.example.mymovie.MyMovie.model;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "movies")
 public class Movie {
 
 
+    @Id
+    @Column(name = "id")
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer movieID;
+
+    @Column(name = "movie_name")
     private String title;
+
+    @Column(name = "movie_category")
     private String category;
+
+    @Column(name = "movie_description")
     private String description;
+
+    @Column(name = "movie_ageLimit")
     private int ageLimit;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "movies_rating_mapping",
+            joinColumns = @JoinColumn(name = "movieId"))
+    @Column(name = "ratingId")
+    private List<Integer> ratingIDs;
+
+    @Transient
+    private List<Rating> ratings;
+
 
 
     public Movie() {
-        super();
+        this.ratingIDs = new ArrayList<Integer>();
     }
 
     public Movie(Integer movieID) {
         super();
         this.movieID = movieID;
+        this.ratingIDs = new ArrayList<Integer>();
     }
 
 
@@ -58,5 +88,26 @@ public class Movie {
 
     public void setAgeLimit(int ageLimit) {
         this.ageLimit = ageLimit;
+    }
+
+    public List<Integer> getRatingIDs() {
+        return ratingIDs;
+    }
+
+    public void setRatingIDs(List<Integer> ratingIDs) {
+        this.ratingIDs = ratingIDs;
+    }
+
+    public void addRating (Rating rating)
+    {
+        this.ratings.add(rating);
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 }

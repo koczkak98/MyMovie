@@ -36,6 +36,10 @@ public class MovieInfo {
         this.myMovies = myMovies;
     }
 
+    public void addMovie(Movie movie) {
+        this.myMovies.add(movie);
+    }
+
     public List<Rating> getMyMoviesRating() {
         return myMoviesRating;
     }
@@ -44,11 +48,8 @@ public class MovieInfo {
         this.myMoviesRating = myMoviesRating;
     }
 
-    public void addMovie(Movie movie) {
-        this.myMovies.add(movie);
-    }
-
-    public void addRating(Rating rating){
+    public void addRating (Rating rating)
+    {
         this.myMoviesRating.add(rating);
     }
 }

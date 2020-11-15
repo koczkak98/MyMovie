@@ -32,19 +32,6 @@ public class MyMovieController {
 
         System.out.println("************-STARTED*****************");
 
-        System.out.println(userID);
-        System.out.println(user.getUserID());
-        System.out.println(user.getUserName());
-
-        /** View */
-        /** JDBC */
-        /**
-        JDBC_SQLHandler mySqlHandler = new JDBC_SQLHandler();
-
-
-        user = mySqlHandler.getUserById(userID);
-         */
-
         /** Hibernate */
         Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
 
@@ -60,19 +47,15 @@ public class MyMovieController {
         RestTemplate restTemplate = new RestTemplate();
         for (int idx = 0; idx < myMovieIDs.size(); idx++) {
             Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
-            RatingInfo rating = restTemplate.getForObject("http://localhost:8082/getrating/" + myMovieIDs.get(idx), RatingInfo.class);
 
             mi.addMovie(movie);
+            System.out.println(movie.getRatingIDs());
+            System.out.println(movie.getRatings());
 
-            for (int i = 0; i < rating.getRatings().size(); i++)
-            {
-                mi.addRating(rating.getRatings().get(i));
+            for (int i = 0; i < movie.getRatings().size(); i++) {
+                mi.addRating(movie.getRatings().get(i));
             }
-
         }
-
-        System.out.println(mi.getMyMoviesRating());
-
 
         /** VIEW */
         model.addAttribute("myMovies", mi);
@@ -87,11 +70,39 @@ public class MyMovieController {
     }
 
     @GetMapping("/getuser/ratingbyuserid/{userid}")
-    public Rating getRatingByUserId (@PathVariable("userid") int userId)
+    public String getRatingByUserId(@PathVariable("userid") int userId,
+                                    Model model)
     {
-        Rating rating = new Rating();
+        Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
 
-        return rating;
+        hibernate_sqlHandler.open();
+        User user = hibernate_sqlHandler.getUserById(userId);
+        hibernate_sqlHandler.close();
+
+        MovieInfo mi = new MovieInfo(userId);
+        List<Integer> myMovieIDs = user.getMovieIDs();
+
+
+        RestTemplate restTemplate = new RestTemplate();
+        for (int idx = 0; idx < myMovieIDs.size(); idx++) {
+            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
+            System.out.println(movie);
+
+            for (int e = 0; e < movie.getRatings().size(); e++) {
+                System.out.println("UserId: " + userId + "Score: " + movie.getRatings().get(e).getScores());
+
+                if (movie.getRatings().get(e).getScores() == userId) {
+                    mi.getMyMovies().clear();
+                    mi.getMyMoviesRating().clear();
+                    mi.addMovie(movie);
+                    mi.addRating(movie.getRatings().get(e));
+                    System.out.println("UserId: " + userId + "Score: " + movie.getRatings().get(e).getScores());
+                }
+            }
+        }
+        model.addAttribute("myMovies", mi);
+        model.addAttribute("user", user);
+
+        return "ratingbyuserid.html";
     }
-
 }
