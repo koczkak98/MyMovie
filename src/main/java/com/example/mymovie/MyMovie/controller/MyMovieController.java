@@ -106,6 +106,13 @@ public class MyMovieController {
         return "ratingbyuserid.html";
     }
 
+    public String userByNameAndId (Model model)
+    {
+        model.addAttribute("user", new User());
+
+        return "inputbyname.html";
+    }
+
 
     @GetMapping("/deletemovie/userid/{userID}/movieid/{movieID}")
     public String deleteMovieByuserID (@PathVariable("userID") int userID,
