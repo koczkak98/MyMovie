@@ -105,4 +105,23 @@ public class MyMovieController {
 
         return "ratingbyuserid.html";
     }
+
+
+    @GetMapping("/deletemovie/userid/{userID}/movieid/{movieID}")
+    public String deleteMovieByuserID (@PathVariable("userID") int userID,
+                                       @PathVariable("movieID") int movieID,
+                                       Model model)
+    {
+        Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
+        hibernate_sqlHandler.open();
+        User user = hibernate_sqlHandler.getUserById(userID);
+        hibernate_sqlHandler.close();
+
+        RestTemplate restTemplate = new RestTemplate();
+        Movie movie = restTemplate.getForObject("http://localhost:8081/deletemovie/"+movieID, Movie.class);
+
+        model.addAttribute("message", "Delete the movie: " + movie.getTitle());
+
+        return "deletemovie.html";
+    }
 }

@@ -110,7 +110,6 @@ public class JDBC_SQLHandler {
 
             if (id == userID)
             {
-
                 user.deleteMovieID(movieID);
 
                 String deleteFrom = "DELETE FROM users WHERE userId = " + userID +
@@ -118,7 +117,6 @@ public class JDBC_SQLHandler {
                 int result = stmt.executeUpdate(deleteFrom);
                 System.out.println("result = " + result);
                 break;
-
             }
         }
 
