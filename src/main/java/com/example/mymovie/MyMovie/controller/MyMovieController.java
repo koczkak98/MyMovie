@@ -28,45 +28,50 @@ public class MyMovieController {
     public String getUserMovies(
             User user,
             int userID,
+            String userName,
             Model model) throws SQLException {
 
         System.out.println("************-STARTED*****************");
 
-        /** Hibernate */
-        Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
+        try {
 
-        hibernate_sqlHandler.open();
-        user = hibernate_sqlHandler.getUserById(user.getUserID());
-        hibernate_sqlHandler.close();
+            /** Hibernate */
+            Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
 
-        System.out.println("After use HibernateSQLHandler: " + user.getUserID());
+            hibernate_sqlHandler.open();
+            user = hibernate_sqlHandler.getUserByIdAndName(user.getUserID(), user.getUserName());
+            hibernate_sqlHandler.close();
 
-        MovieInfo mi = new MovieInfo(userID);
-        List<Integer> myMovieIDs = user.getMovieIDs();
+            System.out.println("After use HibernateSQLHandler: " + user.getUserID());
 
-        RestTemplate restTemplate = new RestTemplate();
-        for (int idx = 0; idx < myMovieIDs.size(); idx++) {
-            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
+            MovieInfo mi = new MovieInfo(userID);
+            List<Integer> myMovieIDs = user.getMovieIDs();
 
-            mi.addMovie(movie);
-            System.out.println(movie.getRatingIDs());
-            System.out.println(movie.getRatings());
+            RestTemplate restTemplate = new RestTemplate();
+            for (int idx = 0; idx < myMovieIDs.size(); idx++) {
+                Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
 
-            for (int i = 0; i < movie.getRatings().size(); i++) {
-                mi.addRating(movie.getRatings().get(i));
+                mi.addMovie(movie);
+                System.out.println(movie.getRatingIDs());
+                System.out.println(movie.getRatings());
+
+                for (int i = 0; i < movie.getRatings().size(); i++) {
+                    mi.addRating(movie.getRatings().get(i));
+                }
             }
+
+            /** VIEW */
+            model.addAttribute("myMovies", mi);
+            model.addAttribute("movieSize", myMovieIDs.size());
+
+            model.addAttribute("user", user);
+
+            return "mymovies_user.html";
         }
-
-        /** VIEW */
-        model.addAttribute("myMovies", mi);
-        model.addAttribute("movieSize", myMovieIDs.size());
-
-        model.addAttribute("user", user);
-
-
-        /** View */
-
-        return "mymovies_user.html";
+        catch (Exception e)
+        {
+            return "error.html";
+        }
     }
 
     @GetMapping("/getuser/ratingbyuserid/{userid}")
@@ -105,14 +110,6 @@ public class MyMovieController {
 
         return "ratingbyuserid.html";
     }
-
-    public String userByNameAndId (Model model)
-    {
-        model.addAttribute("user", new User());
-
-        return "inputbyname.html";
-    }
-
 
     @GetMapping("/deletemovie/userid/{userID}/movieid/{movieID}")
     public String deleteMovieByuserID (@PathVariable("userID") int userID,
