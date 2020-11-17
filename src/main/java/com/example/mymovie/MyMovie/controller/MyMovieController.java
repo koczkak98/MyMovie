@@ -117,9 +117,6 @@ public class MyMovieController {
                                        Model model)
     {
         Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
-        hibernate_sqlHandler.open();
-        User user = hibernate_sqlHandler.getUserById(userID);
-        hibernate_sqlHandler.close();
 
         /** DELETE From umm */
         hibernate_sqlHandler.open();
