@@ -9,6 +9,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -92,6 +93,23 @@ public class Hibernate_SQLHandler {
 
         return user.getUserName();
     }
+
+    public void deleteMovieFromUmm (int movieId, int userId)
+    {
+        Session session = sessionFactory.openSession();
+
+        String queryString = ("DELETE FROM user_movie_mapping umm WHERE umm.movieid = :movieId and umm.userid = :userid");
+        session.beginTransaction();
+        Query q = session.createNativeQuery(queryString);
+        q.setParameter("userid", userId);
+        q.setParameter("movieId", movieId);
+
+        q.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+    }
+
+
 
     public void close ()
     {

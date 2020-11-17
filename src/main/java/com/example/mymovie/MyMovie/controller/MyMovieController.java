@@ -121,10 +121,20 @@ public class MyMovieController {
         User user = hibernate_sqlHandler.getUserById(userID);
         hibernate_sqlHandler.close();
 
-        RestTemplate restTemplate = new RestTemplate();
-        Movie movie = restTemplate.getForObject("http://localhost:8081/deletemovie/"+movieID, Movie.class);
+        /** DELETE From umm */
+        hibernate_sqlHandler.open();
+        hibernate_sqlHandler.deleteMovieFromUmm(movieID, userID);
+        hibernate_sqlHandler.close();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            Movie movie = restTemplate.getForObject("http://localhost:8081/deletemovie/" + movieID, Movie.class);
 
-        model.addAttribute("message", "Delete the movie: " + movie.getTitle());
+            model.addAttribute("message", "Delete the movie: " + movie.getTitle());
+        }
+        catch (Exception e)
+        {
+            e.getMessage();
+        }
 
         return "deletemovie.html";
     }
