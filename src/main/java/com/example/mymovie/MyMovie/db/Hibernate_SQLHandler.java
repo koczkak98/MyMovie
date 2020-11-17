@@ -61,9 +61,9 @@ public class Hibernate_SQLHandler {
 
         /** Prepare HQL Statement */
         Root<User> fromTable = criteria.from(User.class);
-        Predicate condition1 = builder.equal( fromTable.get("id"), userId );
-        Predicate condition2 = builder.like( fromTable.get("name"), name );
-        CriteriaQuery<User> hqlStatement = criteria.select(fromTable).where(condition2, condition1);
+        Predicate condition1 = builder.equal( fromTable.get("userID"), userId );
+        Predicate condition2 = builder.like( fromTable.get("userName"), name );
+        CriteriaQuery<User> hqlStatement = criteria.select(fromTable).where(condition2);
         TypedQuery<User> query = session.createQuery(hqlStatement);
 
 
@@ -84,6 +84,13 @@ public class Hibernate_SQLHandler {
         session.close();
 
         return user;
+    }
+
+    public String checkUserByName (int userId)
+    {
+        User user = getUserById(userId);
+
+        return user.getUserName();
     }
 
     public void close ()

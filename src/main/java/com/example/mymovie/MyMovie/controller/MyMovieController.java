@@ -23,7 +23,6 @@ public class MyMovieController {
         return "input.html";
     }
 
-
     @PostMapping("/getuser")
     public String getUserMovies(
             User user,
@@ -33,46 +32,47 @@ public class MyMovieController {
 
         System.out.println("************-STARTED*****************");
 
-        try {
-
-            /** Hibernate */
-            Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
-
-            hibernate_sqlHandler.open();
-            user = hibernate_sqlHandler.getUserByIdAndName(user.getUserID(), user.getUserName());
-            hibernate_sqlHandler.close();
-
-            System.out.println("After use HibernateSQLHandler: " + user.getUserID());
-
-            MovieInfo mi = new MovieInfo(userID);
-            List<Integer> myMovieIDs = user.getMovieIDs();
-
-            RestTemplate restTemplate = new RestTemplate();
-            for (int idx = 0; idx < myMovieIDs.size(); idx++) {
-                Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
-
-                mi.addMovie(movie);
-                System.out.println(movie.getRatingIDs());
-                System.out.println(movie.getRatings());
-
-                for (int i = 0; i < movie.getRatings().size(); i++) {
-                    mi.addRating(movie.getRatings().get(i));
-                }
-            }
-
-            /** VIEW */
-            model.addAttribute("myMovies", mi);
-            model.addAttribute("movieSize", myMovieIDs.size());
-
-            model.addAttribute("user", user);
-
-            return "mymovies_user.html";
-        }
-        catch (Exception e)
+        Hibernate_SQLHandler hibernate_sqlHandler = new Hibernate_SQLHandler();
+        hibernate_sqlHandler.open();
+        String conditional = hibernate_sqlHandler.checkUserByName(userID);
+        hibernate_sqlHandler.close();
+        if(!user.getUserName().equals(conditional))
         {
             return "error.html";
         }
-    }
+
+
+        /** Hibernate */
+        hibernate_sqlHandler.open();
+        user = hibernate_sqlHandler.getUserByIdAndName(user.getUserID(), user.getUserName());
+        hibernate_sqlHandler.close();
+
+        System.out.println("After use HibernateSQLHandler: " + user.getUserID());
+
+        MovieInfo mi = new MovieInfo(userID);
+        List<Integer> myMovieIDs = user.getMovieIDs();
+
+        RestTemplate restTemplate = new RestTemplate();
+        for (int idx = 0; idx < myMovieIDs.size(); idx++) {
+            Movie movie = restTemplate.getForObject("http://localhost:8081/getmovie/" + myMovieIDs.get(idx), Movie.class);
+
+            mi.addMovie(movie);
+            System.out.println(movie.getRatingIDs());
+            System.out.println(movie.getRatings());
+
+            for (int i = 0; i < movie.getRatings().size(); i++) {
+                mi.addRating(movie.getRatings().get(i));
+            }
+        }
+        /** VIEW */
+        model.addAttribute("myMovies", mi);
+        model.addAttribute("movieSize", myMovieIDs.size());
+
+        model.addAttribute("user", user);
+
+        return "mymovies_user.html";
+        }
+
 
     @GetMapping("/getuser/ratingbyuserid/{userid}")
     public String getRatingByUserId(@PathVariable("userid") int userId,
