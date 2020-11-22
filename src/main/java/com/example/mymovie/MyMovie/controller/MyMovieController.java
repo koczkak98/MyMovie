@@ -120,18 +120,10 @@ public class MyMovieController {
 
         /** DELETE From umm */
         hibernate_sqlHandler.open();
-        hibernate_sqlHandler.deleteMovieFromUmm(movieID, userID);
+        User user = hibernate_sqlHandler.deleteMovieFromUmm(movieID, userID);
         hibernate_sqlHandler.close();
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            Movie movie = restTemplate.getForObject("http://localhost:8081/deletemovie/" + movieID, Movie.class);
 
-            model.addAttribute("message", "Delete the movie: " + movie.getTitle());
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
+        model.addAttribute("message", "The " + movieID + " movieID was delete.");
 
         return "deletemovie.html";
     }

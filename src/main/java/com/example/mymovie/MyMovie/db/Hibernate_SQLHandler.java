@@ -94,10 +94,12 @@ public class Hibernate_SQLHandler {
         return user.getUserName();
     }
 
-    public void deleteMovieFromUmm (int movieId, int userId)
+    public User deleteMovieFromUmm (int movieId, int userId)
     {
+
         Session session = sessionFactory.openSession();
 
+        /**
         String queryString = ("DELETE FROM user_movie_mapping umm WHERE umm.movieid = :movieId and umm.userid = :userid");
         session.beginTransaction();
         Query q = session.createNativeQuery(queryString);
@@ -105,8 +107,19 @@ public class Hibernate_SQLHandler {
         q.setParameter("movieId", movieId);
 
         q.executeUpdate();
+         */
+        session.beginTransaction();
+
+        User user = getUserById(userId);
+        user.deleteMovieID(movieId);
+        session.saveOrUpdate(user);
+
         session.getTransaction().commit();
         session.close();
+
+
+
+        return user;
     }
 
 
